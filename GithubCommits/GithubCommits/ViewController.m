@@ -12,6 +12,7 @@
 @interface ViewController ()
 
 @property(nonatomic,strong)NSArray *colorArray;
+@property(nonatomic,strong)UIView *drawView;
 
 @end
 
@@ -23,6 +24,24 @@
     
     self.colorArray = @[SXRGBColor(234, 234, 234),SXRGBColor(205, 227, 115),SXRGBColor(123, 190, 83),SXRGBColor(56, 150, 49),SXRGBColor(25, 87, 27)];
     
+    UIButton *resetBtn = [UIButton new];
+    resetBtn.frame = CGRectMake(50, 50, 90, 30);
+    resetBtn.backgroundColor = [UIColor yellowColor];
+    [self.view addSubview:resetBtn];
+    [resetBtn addTarget:self action:@selector(addView) forControlEvents:UIControlEventTouchUpInside];
+    
+    // 点击打印自定义图案的时间和次数
+    UIButton *printBtn = [UIButton new];
+    printBtn.frame = CGRectMake(150, 50, 90, 30);
+    printBtn.backgroundColor = [UIColor yellowColor];
+    [self.view addSubview:printBtn];
+    
+    [self addView];
+}
+
+- (void)addView{
+    self.drawView = [UIView new];
+    self.drawView.frame = CGRectMake(50, 100, 1000, 1000);
     int col = 0;
     int row = 0;
     int x = 0;
@@ -32,18 +51,34 @@
     for (int i = 0; i< 370; ++i) {
         col = i/7;
         row = i%7;
-        x = 50 + col * (width + 2);
-        y = 100 + row * (width +2);
+        x = col * (width + 2);
+        y = row * (width +2);
         UIButton *btn = [UIButton new];
         btn.frame = CGRectMake(x, y, width, height);
         btn.backgroundColor = SXRGBColor(234, 234, 234);
-        [self.view addSubview:btn];
+        [btn addTarget:self action:@selector(viewTapOne:) forControlEvents:UIControlEventTouchUpInside];
+        [btn addTarget:self action:@selector(viewTapTwice:) forControlEvents:UIControlEventTouchUpOutside];
+        [self.drawView addSubview:btn];
     }
-    
+    [self.view addSubview:self.drawView];
 }
 
-- (void)btnClick:(UIButton *)btn{
-    
+- (void)viewTapOne:(UIButton *)v{
+    UIColor *bgColor = v.backgroundColor;
+    NSInteger index = [self.colorArray indexOfObject:bgColor];
+    if (index + 1 < self.colorArray.count) {
+        bgColor = [self.colorArray objectAtIndex:index + 1];
+        v.backgroundColor = bgColor;
+    }
+}
+
+- (void)viewTapTwice:(UIButton *)v{
+    UIColor *bgColor = v.backgroundColor;
+    NSInteger index = [self.colorArray indexOfObject:bgColor];
+    if (index - 1 >= 0) {
+        bgColor = [self.colorArray objectAtIndex:index - 1];
+        v.backgroundColor = bgColor;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
