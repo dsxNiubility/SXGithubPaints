@@ -58,14 +58,8 @@
 		1D7431911D55CBD000926CCA /* GithubCommits */ = {
 			isa = PBXGroup;
 			children = (
-				1D7431951D55CBD000926CCA /* AppDelegate.h */,
-				1D7431961D55CBD000926CCA /* AppDelegate.m */,
-				1D7431981D55CBD000926CCA /* ViewController.h */,
+				1D7431A91D55D1ED00926CCA /* ignore */,
 				1D7431991D55CBD000926CCA /* ViewController.m */,
-				1D74319B1D55CBD000926CCA /* Main.storyboard */,
-				1D74319E1D55CBD000926CCA /* Assets.xcassets */,
-				1D7431A01D55CBD000926CCA /* LaunchScreen.storyboard */,
-				1D7431A31D55CBD000926CCA /* Info.plist */,
 				1D7431921D55CBD000926CCA /* Supporting Files */,
 			);
 			path = GithubCommits;
@@ -77,6 +71,20 @@
 				1D7431931D55CBD000926CCA /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1D7431A91D55D1ED00926CCA /* ignore */ = {
+			isa = PBXGroup;
+			children = (
+				1D7431A31D55CBD000926CCA /* Info.plist */,
+				1D74319B1D55CBD000926CCA /* Main.storyboard */,
+				1D74319E1D55CBD000926CCA /* Assets.xcassets */,
+				1D7431A01D55CBD000926CCA /* LaunchScreen.storyboard */,
+				1D7431951D55CBD000926CCA /* AppDelegate.h */,
+				1D7431961D55CBD000926CCA /* AppDelegate.m */,
+				1D7431981D55CBD000926CCA /* ViewController.h */,
+			);
+			name = ignore;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
