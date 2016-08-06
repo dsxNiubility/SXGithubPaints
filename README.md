@@ -1,0 +1,2 @@
+# SXGithubCommits
+尝试用脚本改githubcommit的个性化图案
