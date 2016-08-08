@@ -43,7 +43,7 @@
     resetBtn.frame = CGRectMake(50, 50, 90, 30);
     resetBtn.backgroundColor = [UIColor yellowColor];
     [self.view addSubview:resetBtn];
-    [resetBtn addTarget:self action:@selector(addView) forControlEvents:UIControlEventTouchUpInside];
+    [resetBtn addTarget:self action:@selector(resetBoard) forControlEvents:UIControlEventTouchUpInside];
     
     // 点击打印自定义图案的时间和次数
     UIButton *printBtn = [UIButton new];
@@ -57,7 +57,6 @@
     flowLayout.minimumLineSpacing = 2;
     flowLayout.minimumInteritemSpacing = 2;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    
     self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(50, 100, 650, 82) collectionViewLayout:flowLayout];
     self.collectionView.backgroundColor = [UIColor whiteColor];
     self.collectionView.delegate = self;
@@ -65,7 +64,12 @@
     
     [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:@"CELL"];
     [self.view addSubview:self.collectionView];
-//    [self addView];
+}
+
+- (void)resetBoard
+{
+    [self createItemEntityArray];
+    [self.collectionView reloadData];
 }
 
 - (void)createItemEntityArray
@@ -105,50 +109,6 @@
     bgColor = [self.colorArray objectAtIndex:(index + 1)%5];
     currentEntity.bgColor = bgColor;
     [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-}
-
-
-
-- (void)addView{
-    self.drawView = [UIView new];
-    self.drawView.frame = CGRectMake(50, 100, 1000, 1000);
-    int col = 0;
-    int row = 0;
-    int x = 0;
-    int y = 0;
-    int width = 10;
-    int height = 10;
-    for (int i = 0; i< 370; ++i) {
-        col = i/7;
-        row = i%7;
-        x = col * (width + 2);
-        y = row * (width +2);
-        UIButton *btn = [UIButton new];
-        btn.frame = CGRectMake(x, y, width, height);
-        btn.backgroundColor = SXRGBColor(234, 234, 234);
-        [btn addTarget:self action:@selector(viewTapOne:) forControlEvents:UIControlEventTouchUpInside];
-        [btn addTarget:self action:@selector(viewTapTwice:) forControlEvents:UIControlEventTouchUpOutside];
-        [self.drawView addSubview:btn];
-    }
-    [self.view addSubview:self.drawView];
-}
-
-- (void)viewTapOne:(UIButton *)v{
-    UIColor *bgColor = v.backgroundColor;
-    NSInteger index = [self.colorArray indexOfObject:bgColor];
-    if (index + 1 < self.colorArray.count) {
-        bgColor = [self.colorArray objectAtIndex:index + 1];
-        v.backgroundColor = bgColor;
-    }
-}
-
-- (void)viewTapTwice:(UIButton *)v{
-    UIColor *bgColor = v.backgroundColor;
-    NSInteger index = [self.colorArray indexOfObject:bgColor];
-    if (index - 1 >= 0) {
-        bgColor = [self.colorArray objectAtIndex:index - 1];
-        v.backgroundColor = bgColor;
-    }
 }
 
 - (void)didReceiveMemoryWarning {
