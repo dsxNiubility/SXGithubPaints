@@ -35,7 +35,27 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    self.dayCount = 371;
+    NSString *week = [self weekStringFromDate:[NSDate date]];
+    self.dayCount = 0;
+    if ([week isEqualToString:@"Sunday"]) {
+        self.dayCount = 371+1;
+    }else if ([week isEqualToString:@"Monday"]){
+        self.dayCount = 371+2;
+    }else if ([week isEqualToString:@"Tuesday"]){
+        self.dayCount = 371+3;
+    }else if ([week isEqualToString:@"Wednesday"]){
+        self.dayCount = 371+4;
+    }else if ([week isEqualToString:@"Thursday"]){
+        self.dayCount = 371+5;
+    }else if ([week isEqualToString:@"Friday"]){
+        self.dayCount = 371+6;
+    }else if ([week isEqualToString:@"Saturday"]){
+        self.dayCount = 371+7;
+    }
+    
+    NSLog(@"%@",[NSDate date]);
+    NSLog(@"%@",[NSDate dateWithTimeIntervalSince1970:[NSDate new].timeIntervalSince1970 - 86400*5]);
+
     self.colorArray = @[SXRGBColor(234, 234, 234),SXRGBColor(205, 227, 115),SXRGBColor(123, 190, 83),SXRGBColor(56, 150, 49),SXRGBColor(25, 87, 27)];
     [self createItemEntityArray];
     
@@ -89,7 +109,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-    return 371;
+    return self.dayCount;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -114,6 +134,19 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+/**
+ *  判断今天是星期几
+ */
+-(NSString *)weekStringFromDate:(NSDate *)date{
+    NSArray *weeks=@[[NSNull null],@"Sunday",@"Monday",@"Tuesday",@"Wednesday",@"Thursday",@"Friday",@"Saturday"];
+    NSCalendar *calendar=[[NSCalendar alloc]initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+    NSTimeZone *timeZone=[[NSTimeZone alloc]initWithName:@"Asia/Beijing"];
+    [calendar setTimeZone:timeZone];
+    NSCalendarUnit calendarUnit= NSCalendarUnitWeekday;
+    NSDateComponents *components=[calendar components:calendarUnit fromDate:date];
+    return [weeks objectAtIndex:components.weekday];
 }
 
 @end
