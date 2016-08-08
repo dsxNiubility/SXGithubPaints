@@ -31,10 +31,28 @@
 
 @implementation ViewController
 
+#pragma mark -
+#pragma mark 初始化方法
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
+
+    [self createDateEnv];
+    NSLog(@"%@",[NSDate date]);
+    NSLog(@"%@",[NSDate dateWithTimeIntervalSince1970:[NSDate new].timeIntervalSince1970 - 86400*5]);
+    NSLog(@"%@",[self dataStringWithDeltaDay:5]);
+
+    self.colorArray = @[SXRGBColor(234, 234, 234),SXRGBColor(205, 227, 115),SXRGBColor(123, 190, 83),SXRGBColor(56, 150, 49),SXRGBColor(25, 87, 27)];
+    
+    [self createItemEntityArray];
+    [self createOperationModule];
+    [self createCollectionView];
+}
+
+// 初始化天
+- (void)createDateEnv
+{
     NSString *week = [self weekStringFromDate:[NSDate date]];
     self.dayCount = 0;
     if ([week isEqualToString:@"Sunday"]) {
@@ -52,26 +70,23 @@
     }else if ([week isEqualToString:@"Saturday"]){
         self.dayCount = 371+7;
     }
-    
-    NSLog(@"%@",[NSDate date]);
-    NSLog(@"%@",[NSDate dateWithTimeIntervalSince1970:[NSDate new].timeIntervalSince1970 - 86400*5]);
+}
 
-    self.colorArray = @[SXRGBColor(234, 234, 234),SXRGBColor(205, 227, 115),SXRGBColor(123, 190, 83),SXRGBColor(56, 150, 49),SXRGBColor(25, 87, 27)];
-    [self createItemEntityArray];
-    
-    UIButton *resetBtn = [UIButton new];
-    resetBtn.frame = CGRectMake(50, 50, 90, 30);
-    resetBtn.backgroundColor = [UIColor yellowColor];
-    [self.view addSubview:resetBtn];
-    [resetBtn addTarget:self action:@selector(resetBoard) forControlEvents:UIControlEventTouchUpInside];
-    
-    // 点击打印自定义图案的时间和次数
-    UIButton *printBtn = [UIButton new];
-    printBtn.frame = CGRectMake(150, 50, 90, 30);
-    printBtn.backgroundColor = [UIColor yellowColor];
-    [self.view addSubview:printBtn];
-    
-    
+// 初始化内容模型
+- (void)createItemEntityArray
+{
+    self.colorItemArray = [NSMutableArray array];
+    for (int i = 0; i<self.dayCount; i++) {
+        ItemEntity *entity = [ItemEntity new];
+        entity.bgColor = SXRGBColor(234, 234, 234);
+        entity.date = [self dataStringWithDeltaDay:self.dayCount - i -1];
+        [self.colorItemArray addObject:entity];
+    }
+}
+
+// 初始化collectionView
+- (void)createCollectionView
+{
     UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
     flowLayout.itemSize = CGSizeMake(10, 10);
     flowLayout.minimumLineSpacing = 2;
@@ -86,22 +101,24 @@
     [self.view addSubview:self.collectionView];
 }
 
-- (void)resetBoard
+// 创建操作类按钮
+- (void)createOperationModule
 {
-    [self createItemEntityArray];
-    [self.collectionView reloadData];
+    UIButton *resetBtn = [UIButton new];
+    resetBtn.frame = CGRectMake(50, 50, 90, 30);
+    resetBtn.backgroundColor = [UIColor yellowColor];
+    [self.view addSubview:resetBtn];
+    [resetBtn addTarget:self action:@selector(resetBoard) forControlEvents:UIControlEventTouchUpInside];
+    
+    // 点击打印自定义图案的时间和次数
+    UIButton *printBtn = [UIButton new];
+    printBtn.frame = CGRectMake(150, 50, 90, 30);
+    printBtn.backgroundColor = [UIColor yellowColor];
+    [self.view addSubview:printBtn];
 }
 
-- (void)createItemEntityArray
-{
-    self.colorItemArray = [NSMutableArray array];
-    for (int i = 0; i<self.dayCount; ++i) {
-        ItemEntity *entity = [ItemEntity new];
-        entity.bgColor = SXRGBColor(234, 234, 234);
-        [self.colorItemArray addObject:entity];
-    }
-}
-
+#pragma mark -
+#pragma mark 数据源代理方法CollectionView
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
     return 1;
@@ -124,6 +141,7 @@
 {
     NSLog(@"%ld",indexPath.item);
     ItemEntity *currentEntity = [self.colorItemArray objectAtIndex:indexPath.item];
+    NSLog(@"%@",currentEntity.date);
     UIColor *bgColor = currentEntity.bgColor;
     NSInteger index = [self.colorArray indexOfObject:bgColor];
     bgColor = [self.colorArray objectAtIndex:(index + 1)%5];
@@ -131,11 +149,17 @@
     [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark -
+#pragma mark 操作类方法
+- (void)resetBoard
+{
+    [self createItemEntityArray];
+    [self.collectionView reloadData];
 }
 
+
+#pragma mark -
+#pragma mark 工具类方法
 /**
  *  判断今天是星期几
  */
@@ -149,7 +173,21 @@
     return [weeks objectAtIndex:components.weekday];
 }
 
+/**
+ *  通过天数差得到具体的时间字符串（适配终端指令）
+ */
+- (NSString *)dataStringWithDeltaDay:(NSInteger)deltaDay
+{
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:[NSDate new].timeIntervalSince1970 - 86400 * deltaDay];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc]init];
+    [formatter setDateFormat:@"MMddHHmmyyyy.ss"];
+    NSString *str = [formatter stringFromDate:date];
+    return str;
+}
+
 @end
+
+#pragma mark -
 
 @implementation ItemEntity
 
