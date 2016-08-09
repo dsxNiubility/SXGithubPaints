@@ -21,6 +21,7 @@
 
 @property(nonatomic,assign)NSInteger dayCount;
 @property(nonatomic,strong)NSArray *colorArray;
+@property(nonatomic,strong)NSArray *timesArray;
 @property(nonatomic,strong)UIView *drawView;
 
 @property(nonatomic,strong)UICollectionView *collectionView;
@@ -44,6 +45,7 @@
     NSLog(@"%@",[self dataStringWithDeltaDay:5]);
 
     self.colorArray = @[SXRGBColor(234, 234, 234),SXRGBColor(205, 227, 115),SXRGBColor(123, 190, 83),SXRGBColor(56, 150, 49),SXRGBColor(25, 87, 27)];
+    self.timesArray = @[@0,@2,@4,@6,@8];
     
     [self createItemEntityArray];
     [self createOperationModule];
@@ -114,6 +116,7 @@
     UIButton *printBtn = [UIButton new];
     printBtn.frame = CGRectMake(150, 50, 90, 30);
     printBtn.backgroundColor = [UIColor yellowColor];
+    [printBtn addTarget:self action:@selector(printCommitBoard) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:printBtn];
 }
 
@@ -146,7 +149,10 @@
     NSInteger index = [self.colorArray indexOfObject:bgColor];
     bgColor = [self.colorArray objectAtIndex:(index + 1)%5];
     currentEntity.bgColor = bgColor;
+    currentEntity.commitCount = [[self.timesArray objectAtIndex:(index + 1)%5] integerValue];
+    NSLog(@"%ld",currentEntity.commitCount);
     [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+//    NSLog(@"%@",[self randomSix]);
 }
 
 #pragma mark -
@@ -155,6 +161,23 @@
 {
     [self createItemEntityArray];
     [self.collectionView reloadData];
+}
+
+- (void)printCommitBoard
+{
+    NSMutableString *str = [NSMutableString string];
+    [str appendString:@"git init\n"];
+    for (int i = 0; i < self.colorItemArray.count; ++i) {
+        ItemEntity *entity = [self.colorItemArray objectAtIndex:i];
+        if (entity.commitCount != 0) {
+            [str appendFormat:@"sudo date %@\n",entity.date];
+            for (int j = 0; j < entity.commitCount; ++j) {
+                [str appendFormat:@"touch %@_%@.txt\n",[entity.date substringToIndex:12],[self randomSix]];
+                [str appendString:@"git add .\ngit commit -m \"happy\"\n"];
+            }
+        }
+    }
+    NSLog(@"%@",str);
 }
 
 
@@ -183,6 +206,15 @@
     [formatter setDateFormat:@"MMddHHmmyyyy.ss"];
     NSString *str = [formatter stringFromDate:date];
     return str;
+}
+
+/**
+ *  随机生成一个6位数
+ */
+- (NSString *)randomSix
+{
+    NSInteger random = arc4random()%999999;
+    return [NSString stringWithFormat:@"%06ld",(long)random];
 }
 
 @end
