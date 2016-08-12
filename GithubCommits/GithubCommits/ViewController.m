@@ -45,7 +45,7 @@
     NSLog(@"%@",[self dataStringWithDeltaDay:5]);
 
     self.colorArray = @[SXRGBColor(234, 234, 234),SXRGBColor(205, 227, 115),SXRGBColor(123, 190, 83),SXRGBColor(56, 150, 49),SXRGBColor(25, 87, 27)];
-    self.timesArray = @[@0,@2,@4,@6,@8];
+    self.timesArray = @[@0,@1,@3,@5,@7];
     
     [self createItemEntityArray];
     [self createOperationModule];
@@ -166,18 +166,20 @@
 - (void)printCommitBoard
 {
     NSMutableString *str = [NSMutableString string];
-    [str appendString:@"git init\n"];
+    [str appendString:@"#!/usr/bin/expect\n#spawn cd /Users/dsx/Desktop\n#spawn mkdir SXCommitBoard\n#spawn cd SXCommitBoard\nspawn sudo echo 1\nexpect {\n    \"*assword*\" {\n        send \"5678\\n\"\n        exp_continue\n    }\n}\n"];
     for (int i = 0; i < self.colorItemArray.count; ++i) {
         ItemEntity *entity = [self.colorItemArray objectAtIndex:i];
         if (entity.commitCount != 0) {
-            [str appendFormat:@"sudo date %@\n",entity.date];
+            [str appendFormat:@"spawn sudo date %@\n",entity.date];
             for (int j = 0; j < entity.commitCount; ++j) {
-                [str appendFormat:@"touch %@_%@.txt\n",[entity.date substringToIndex:12],[self randomSix]];
-                [str appendString:@"git add .\ngit commit -m \"happy\"\n"];
+                [str appendFormat:@"spawn touch %@_%@.txt\n",[entity.date substringToIndex:12],[self randomSix]];
+                [str appendString:@"spawn git add .\nspawn git commit -m \"happy\"\n"];
             }
         }
     }
+    [str appendFormat:@"spawn sudo date %@\n",[self dataStringWithDeltaDay:0]];
     NSLog(@"%@",str);
+    [str writeToFile:@"/Users/dsx/Desktop/dsx.sh" atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 }
 
 
@@ -213,8 +215,8 @@
  */
 - (NSString *)randomSix
 {
-    NSInteger random = arc4random()%999999;
-    return [NSString stringWithFormat:@"%06ld",(long)random];
+    NSInteger random = arc4random_uniform(9999);
+    return [NSString stringWithFormat:@"%04ld",(long)random];
 }
 
 @end
