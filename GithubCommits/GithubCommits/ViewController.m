@@ -167,7 +167,8 @@
 }
 - (IBAction)generater:(UIButton *)sender {
     NSMutableString *str = [NSMutableString string];
-    [str appendString:@"#!/usr/bin/expect\n#spawn cd /Users/dsx/Desktop\n#spawn mkdir SXCommitBoard\n#spawn cd SXCommitBoard\nspawn sudo echo 1\nexpect {\n    \"*assword*\" {\n        send \"5678\\n\"\n        exp_continue\n    }\n}\nspawn git init\n"];
+    [str appendFormat:@"#!/usr/bin/expect\n#spawn cd /Users/dsx/Desktop\n#spawn mkdir SXCommitBoard\n#spawn cd SXCommitBoard\nspawn sudo echo 1\nexpect {\n    \"*assword*\" {\n        send \"%@\\n\"\n        exp_continue\n    }\n}\nspawn git init\n",self.compwdTxt.text];
+    [str appendFormat:@"spawn git config user.name %@\nspawn git config user.email %@\n",self.usernameTxt.text,self.useremailTxt.text];
     for (int i = 0; i < self.colorItemArray.count; ++i) {
         ItemEntity *entity = [self.colorItemArray objectAtIndex:i];
         if (entity.commitCount != 0) {
@@ -192,33 +193,6 @@
     }
     [self.collectionView reloadData];
 }
-
-- (void)resetBoard
-{
-    [self createItemEntityArray];
-    [self.collectionView reloadData];
-}
-
-- (void)printCommitBoard
-{
-    NSMutableString *str = [NSMutableString string];
-    [str appendString:@"#!/usr/bin/expect\n#spawn cd /Users/dsx/Desktop\n#spawn mkdir SXCommitBoard\n#spawn cd SXCommitBoard\nspawn sudo echo 1\nexpect {\n    \"*assword*\" {\n        send \"5678\\n\"\n        exp_continue\n    }\n}\nspawn git init\n"];
-    for (int i = 0; i < self.colorItemArray.count; ++i) {
-        ItemEntity *entity = [self.colorItemArray objectAtIndex:i];
-        if (entity.commitCount != 0) {
-            [str appendFormat:@"spawn sudo date %@\n",entity.date];
-            for (int j = 0; j < entity.commitCount; ++j) {
-                [str appendFormat:@"spawn touch %@_%@.txt\n",[entity.date substringToIndex:12],[self randomSix]];
-                [str appendString:@"spawn git add .\nspawn git commit -m \"happy\"\n"];
-            }
-        }
-    }
-    [str appendFormat:@"spawn sudo date %@\n",[self dataStringWithDeltaDay:0]];
-    [str appendString:@"spawn touch thelast.txt\nspawn git add .\nspawn git commit -m \"thelast\"\nspawn git checkout .\n"];
-    NSLog(@"%@",str);
-    [str writeToFile:@"/Users/dsx/Desktop/dsx.sh" atomically:YES encoding:NSUTF8StringEncoding error:NULL];
-}
-
 
 #pragma mark -
 #pragma mark 工具类方法
