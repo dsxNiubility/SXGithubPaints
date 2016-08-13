@@ -166,7 +166,7 @@
 - (void)printCommitBoard
 {
     NSMutableString *str = [NSMutableString string];
-    [str appendString:@"#!/usr/bin/expect\n#spawn cd /Users/dsx/Desktop\n#spawn mkdir SXCommitBoard\n#spawn cd SXCommitBoard\nspawn sudo echo 1\nexpect {\n    \"*assword*\" {\n        send \"5678\\n\"\n        exp_continue\n    }\n}\n"];
+    [str appendString:@"#!/usr/bin/expect\n#spawn cd /Users/dsx/Desktop\n#spawn mkdir SXCommitBoard\n#spawn cd SXCommitBoard\nspawn sudo echo 1\nexpect {\n    \"*assword*\" {\n        send \"5678\\n\"\n        exp_continue\n    }\n}\nspawn git init\n"];
     for (int i = 0; i < self.colorItemArray.count; ++i) {
         ItemEntity *entity = [self.colorItemArray objectAtIndex:i];
         if (entity.commitCount != 0) {
@@ -178,6 +178,7 @@
         }
     }
     [str appendFormat:@"spawn sudo date %@\n",[self dataStringWithDeltaDay:0]];
+    [str appendString:@"spawn touch thelast.txt\nspawn git add .\nspawn git commit -m \"thelast\"\nspawn git checkout .\n"];
     NSLog(@"%@",str);
     [str writeToFile:@"/Users/dsx/Desktop/dsx.sh" atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 }
