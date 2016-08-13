@@ -18,6 +18,9 @@
 @end
 
 @interface ViewController ()<UICollectionViewDataSource,UICollectionViewDelegate>
+@property (weak, nonatomic) IBOutlet UITextField *compwdTxt;
+@property (weak, nonatomic) IBOutlet UITextField *usernameTxt;
+@property (weak, nonatomic) IBOutlet UITextField *useremailTxt;
 
 @property(nonatomic,assign)NSInteger dayCount;
 @property(nonatomic,strong)NSArray *colorArray;
@@ -48,7 +51,7 @@
     self.timesArray = @[@0,@1,@3,@5,@7];
     
     [self createItemEntityArray];
-    [self createOperationModule];
+//    [self createOperationModule];
     [self createCollectionView];
 }
 
@@ -70,7 +73,7 @@
     }else if ([week isEqualToString:@"Friday"]){
         self.dayCount = 371+6;
     }else if ([week isEqualToString:@"Saturday"]){
-        self.dayCount = 371+7;
+        self.dayCount = 371;
     }
 }
 
@@ -94,7 +97,7 @@
     flowLayout.minimumLineSpacing = 2;
     flowLayout.minimumInteritemSpacing = 2;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(50, 100, 650, 82) collectionViewLayout:flowLayout];
+    self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(30, 100, 650, 82) collectionViewLayout:flowLayout];
     self.collectionView.backgroundColor = [UIColor whiteColor];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -157,6 +160,39 @@
 
 #pragma mark -
 #pragma mark 操作类方法
+
+- (IBAction)resetBtnClick:(UIButton *)sender {
+    [self createItemEntityArray];
+    [self.collectionView reloadData];
+}
+- (IBAction)generater:(UIButton *)sender {
+    NSMutableString *str = [NSMutableString string];
+    [str appendString:@"#!/usr/bin/expect\n#spawn cd /Users/dsx/Desktop\n#spawn mkdir SXCommitBoard\n#spawn cd SXCommitBoard\nspawn sudo echo 1\nexpect {\n    \"*assword*\" {\n        send \"5678\\n\"\n        exp_continue\n    }\n}\nspawn git init\n"];
+    for (int i = 0; i < self.colorItemArray.count; ++i) {
+        ItemEntity *entity = [self.colorItemArray objectAtIndex:i];
+        if (entity.commitCount != 0) {
+            [str appendFormat:@"spawn sudo date %@\n",entity.date];
+            for (int j = 0; j < entity.commitCount; ++j) {
+                [str appendFormat:@"spawn touch %@_%@.txt\n",[entity.date substringToIndex:12],[self randomSix]];
+                [str appendString:@"spawn git add .\nspawn git commit -m \"happy\"\n"];
+            }
+        }
+    }
+    [str appendFormat:@"spawn sudo date %@\n",[self dataStringWithDeltaDay:0]];
+    [str appendString:@"spawn touch thelast.txt\nspawn git add .\nspawn git commit -m \"thelast\"\nspawn git checkout .\n"];
+    NSLog(@"%@",str);
+    [str writeToFile:@"/Users/dsx/Desktop/dsx.sh" atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+}
+- (IBAction)randomDesign:(UIButton *)sender {
+    [self createItemEntityArray];
+    for (ItemEntity *entity in self.colorItemArray) {
+        NSInteger ra = arc4random()%9;
+        entity.commitCount = [[self.timesArray objectAtIndex:ra > 4 ? 0 : ra]integerValue];
+        entity.bgColor = [self.colorArray objectAtIndex:ra > 4 ? 0 : ra];
+    }
+    [self.collectionView reloadData];
+}
+
 - (void)resetBoard
 {
     [self createItemEntityArray];
