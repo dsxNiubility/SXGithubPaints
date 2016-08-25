@@ -50,6 +50,10 @@
     self.colorArray = @[SXRGBColor(234, 234, 234),SXRGBColor(205, 227, 115),SXRGBColor(123, 190, 83),SXRGBColor(56, 150, 49),SXRGBColor(25, 87, 27)];
     self.timesArray = @[@0,@1,@3,@5,@7];
     
+    self.compwdTxt.text = @"5678";
+    self.useremailTxt.text = @"dantesx2012@gmail.com";
+    self.usernameTxt.text = @"dongshangxian";
+    
     [self createItemEntityArray];
 //    [self createOperationModule];
     [self createCollectionView];
@@ -106,23 +110,6 @@
     [self.view addSubview:self.collectionView];
 }
 
-// 创建操作类按钮
-- (void)createOperationModule
-{
-    UIButton *resetBtn = [UIButton new];
-    resetBtn.frame = CGRectMake(50, 50, 90, 30);
-    resetBtn.backgroundColor = [UIColor yellowColor];
-    [self.view addSubview:resetBtn];
-    [resetBtn addTarget:self action:@selector(resetBoard) forControlEvents:UIControlEventTouchUpInside];
-    
-    // 点击打印自定义图案的时间和次数
-    UIButton *printBtn = [UIButton new];
-    printBtn.frame = CGRectMake(150, 50, 90, 30);
-    printBtn.backgroundColor = [UIColor yellowColor];
-    [printBtn addTarget:self action:@selector(printCommitBoard) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:printBtn];
-}
-
 #pragma mark -
 #pragma mark 数据源代理方法CollectionView
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
@@ -167,27 +154,27 @@
 }
 - (IBAction)generater:(UIButton *)sender {
     NSMutableString *str = [NSMutableString string];
-    [str appendFormat:@"#!/usr/bin/expect\n#spawn cd /Users/dsx/Desktop\n#spawn mkdir SXCommitBoard\n#spawn cd SXCommitBoard\nspawn sudo echo 1\nexpect {\n    \"*assword*\" {\n        send \"%@\\n\"\n        exp_continue\n    }\n}\nspawn git init\n",self.compwdTxt.text];
-    [str appendFormat:@"spawn git config user.name %@\nspawn git config user.email %@\n",self.usernameTxt.text,self.useremailTxt.text];
+    [str appendFormat:@"#!/usr/bin/expect\n#spawn cd /Users/dsx/Desktop\n#spawn mkdir SXCommitBoard\n#spawn cd SXCommitBoard\nspawn sudo echo 1\nexpect {\n    \"*assword*\" {\n        send \"%@\\n\"\n        exp_continue\n    }\n}\nexec git init\n",self.compwdTxt.text];
+    [str appendFormat:@"exec git config user.name %@\nexec git config user.email %@\n",self.usernameTxt.text,self.useremailTxt.text];
     for (int i = 0; i < self.colorItemArray.count; ++i) {
         ItemEntity *entity = [self.colorItemArray objectAtIndex:i];
         if (entity.commitCount != 0) {
-            [str appendFormat:@"spawn sudo date %@\n",entity.date];
+            [str appendFormat:@"exec sudo date %@\n",entity.date];
             for (int j = 0; j < entity.commitCount; ++j) {
-                [str appendFormat:@"spawn touch %@_%@.txt\n",[entity.date substringToIndex:12],[self randomSix]];
-                [str appendString:@"spawn git add .\nspawn git commit -m \"happy\"\n"];
+                [str appendFormat:@"exec touch %@_%@.txt\nexec sleep 0.1\n",[entity.date substringToIndex:12],[self randomSix]];
+                [str appendString:@"exec git add .\nexec sleep 0.1\nexec git commit -m \"happy\"\nexec sleep 0.1\n"];
             }
         }
     }
-    [str appendFormat:@"spawn sudo date %@\n",[self dataStringWithDeltaDay:0]];
-    [str appendString:@"spawn touch thelast.txt\nspawn git add .\nspawn git commit -m \"thelast\"\nspawn git checkout .\n"];
+    [str appendFormat:@"exec sudo date %@\n",[self dataStringWithDeltaDay:0]];
+    [str appendString:@"exec touch thelast.txt\nexec git add .\nexec git commit -m \"thelast\"\nexec git checkout .\n"];
     NSLog(@"%@",str);
     [str writeToFile:@"/Users/dsx/Desktop/dsx.sh" atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 }
 - (IBAction)randomDesign:(UIButton *)sender {
     [self createItemEntityArray];
     for (ItemEntity *entity in self.colorItemArray) {
-        NSInteger ra = arc4random()%9;
+        NSInteger ra = arc4random()%12;
         entity.commitCount = [[self.timesArray objectAtIndex:ra > 4 ? 0 : ra]integerValue];
         entity.bgColor = [self.colorArray objectAtIndex:ra > 4 ? 0 : ra];
     }
