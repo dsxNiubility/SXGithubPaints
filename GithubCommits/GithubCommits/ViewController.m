@@ -21,6 +21,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *compwdTxt;
 @property (weak, nonatomic) IBOutlet UITextField *usernameTxt;
 @property (weak, nonatomic) IBOutlet UITextField *useremailTxt;
+@property (weak, nonatomic) IBOutlet UITextField *comusersTxt;
 
 @property(nonatomic,assign)NSInteger dayCount;
 @property(nonatomic,strong)NSArray *colorArray;
@@ -53,9 +54,9 @@
     self.compwdTxt.text = @"5678";
     self.useremailTxt.text = @"dantesx2012@gmail.com";
     self.usernameTxt.text = @"dongshangxian";
+    self.comusersTxt.text = @"dsx";
     
     [self createItemEntityArray];
-//    [self createOperationModule];
     [self createCollectionView];
 }
 
@@ -101,7 +102,7 @@
     flowLayout.minimumLineSpacing = 2;
     flowLayout.minimumInteritemSpacing = 2;
     flowLayout.scrollDirection = UICollectionViewScrollDirectionHorizontal;
-    self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(30, 100, 650, 82) collectionViewLayout:flowLayout];
+    self.collectionView = [[UICollectionView alloc]initWithFrame:CGRectMake(30, 150, 650, 82) collectionViewLayout:flowLayout];
     self.collectionView.backgroundColor = [UIColor whiteColor];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -154,7 +155,7 @@
 }
 - (IBAction)generater:(UIButton *)sender {
     NSMutableString *str = [NSMutableString string];
-    [str appendFormat:@"#!/usr/bin/expect\n#spawn cd /Users/dsx/Desktop\n#spawn mkdir SXCommitBoard\n#spawn cd SXCommitBoard\nspawn sudo echo 1\nexpect {\n    \"*assword*\" {\n        send \"%@\\n\"\n        exp_continue\n    }\n}\nexec git init\n",self.compwdTxt.text];
+    [str appendFormat:@"#!/usr/bin/expect\n#spawn cd /Users/dsx/Desktop\n#spawn mkdir SXCommitBoard\n#spawn cd SXCommitBoard\nspawn sudo echo 请稍等3分钟不要关闭\nexpect {\n    \"*assword*\" {\n        send \"%@\\n\"\n        exp_continue\n    }\n}\n",self.compwdTxt.text];
     [str appendFormat:@"exec git config user.name %@\nexec git config user.email %@\n",self.usernameTxt.text,self.useremailTxt.text];
     for (int i = 0; i < self.colorItemArray.count; ++i) {
         ItemEntity *entity = [self.colorItemArray objectAtIndex:i];
@@ -169,14 +170,19 @@
     [str appendFormat:@"exec sudo date %@\n",[self dataStringWithDeltaDay:0]];
     [str appendString:@"exec touch thelast.txt\nexec git add .\nexec git commit -m \"thelast\"\nexec git checkout .\n"];
     NSLog(@"%@",str);
-    [str writeToFile:@"/Users/dsx/Desktop/dsx.sh" atomically:YES encoding:NSUTF8StringEncoding error:NULL];
+    NSString *file = [NSString stringWithFormat:@"/Users/%@/Desktop/dsx.sh",self.comusersTxt.text];
+    [str writeToFile:file atomically:YES encoding:NSUTF8StringEncoding error:NULL];
 }
 - (IBAction)randomDesign:(UIButton *)sender {
     [self createItemEntityArray];
     for (ItemEntity *entity in self.colorItemArray) {
-        NSInteger ra = arc4random()%12;
+        NSInteger ra = arc4random()%9;
         entity.commitCount = [[self.timesArray objectAtIndex:ra > 4 ? 0 : ra]integerValue];
         entity.bgColor = [self.colorArray objectAtIndex:ra > 4 ? 0 : ra];
+        if ((entity.commitCount == 7) && (arc4random()%10 < 5)) {
+            entity.commitCount = 3;
+            entity.bgColor = self.colorArray[1];
+        }
     }
     [self.collectionView reloadData];
 }
