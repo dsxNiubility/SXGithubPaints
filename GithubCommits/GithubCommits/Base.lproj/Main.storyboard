@@ -162,16 +162,36 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Icu-vJ-nyA">
+                                <rect key="frame" x="341" y="90" width="100" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <state key="normal" title="保存画板">
+                                    <color key="titleColor" red="1" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="saveBoard" destination="BYZ-38-t0r" eventType="touchUpInside" id="dZo-3E-dE8"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="f4B-Dc-4I8" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="10" id="025-2e-8En"/>
+                            <constraint firstItem="Icu-vJ-nyA" firstAttribute="leading" secondItem="bIe-mO-qxe" secondAttribute="trailing" constant="11" id="2MY-7X-kbw"/>
                             <constraint firstItem="kj4-t6-Rs1" firstAttribute="top" secondItem="1h4-54-T6S" secondAttribute="bottom" constant="-5" id="4h4-4D-wt9"/>
                             <constraint firstItem="UD1-z3-PKA" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="10" id="68d-fj-LOk"/>
                             <constraint firstItem="kj4-t6-Rs1" firstAttribute="leading" secondItem="1h4-54-T6S" secondAttribute="leading" id="6Iq-RX-bkS"/>
                             <constraint firstItem="R2H-Et-4SQ" firstAttribute="trailing" secondItem="Q0k-0g-VDp" secondAttribute="trailing" id="86c-wJ-Uhd"/>
                             <constraint firstItem="kj4-t6-Rs1" firstAttribute="trailing" secondItem="1h4-54-T6S" secondAttribute="trailing" id="9aW-w5-aUn"/>
                             <constraint firstItem="26a-FQ-nKy" firstAttribute="top" secondItem="Q0k-0g-VDp" secondAttribute="bottom" constant="15" id="Enq-px-zo3"/>
+                            <constraint firstItem="Icu-vJ-nyA" firstAttribute="width" secondItem="bIe-mO-qxe" secondAttribute="width" id="F3O-It-CBd"/>
+                            <constraint firstItem="Icu-vJ-nyA" firstAttribute="centerY" secondItem="bIe-mO-qxe" secondAttribute="centerY" id="I7v-x9-jjH"/>
                             <constraint firstItem="Q0k-0g-VDp" firstAttribute="top" secondItem="1h4-54-T6S" secondAttribute="bottom" constant="5" id="IDH-Ch-wr1"/>
                             <constraint firstItem="c8w-58-LA2" firstAttribute="leading" secondItem="gg5-dQ-Pla" secondAttribute="leading" id="JkZ-jF-bSW"/>
                             <constraint firstItem="c8w-58-LA2" firstAttribute="trailing" secondItem="gg5-dQ-Pla" secondAttribute="trailing" id="Jw7-eb-qKr"/>
@@ -179,6 +199,7 @@
                             <constraint firstItem="UD1-z3-PKA" firstAttribute="top" secondItem="Q0k-0g-VDp" secondAttribute="bottom" constant="15" id="WNG-E8-spU"/>
                             <constraint firstItem="1h4-54-T6S" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="10" id="WT5-dP-vse"/>
                             <constraint firstItem="26a-FQ-nKy" firstAttribute="leading" secondItem="UD1-z3-PKA" secondAttribute="trailing" constant="10" id="Wy2-af-jUl"/>
+                            <constraint firstItem="Icu-vJ-nyA" firstAttribute="height" secondItem="bIe-mO-qxe" secondAttribute="height" id="X2M-wn-SZf"/>
                             <constraint firstItem="Q0k-0g-VDp" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="10" id="chL-RI-S2J"/>
                             <constraint firstItem="5tG-LG-gdW" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="10" id="chX-9D-quh"/>
                             <constraint firstItem="gg5-dQ-Pla" firstAttribute="leading" secondItem="Q0k-0g-VDp" secondAttribute="trailing" constant="10" id="czS-lQ-1ru"/>

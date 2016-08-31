@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #define SXRGBColor(r,g,b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
 
-@interface ItemEntity : NSObject
+@interface ItemEntity : NSObject<NSCoding>
 
 @property(nonatomic,strong)NSString *date;
 @property(nonatomic,strong)UIColor *bgColor;
@@ -27,6 +27,8 @@
 @property(nonatomic,strong)NSArray *colorArray;
 @property(nonatomic,strong)NSArray *timesArray;
 @property(nonatomic,strong)UIView *drawView;
+
+@property(nonatomic,strong)UITextField *saveNameTxt;
 
 @property(nonatomic,strong)UICollectionView *collectionView;
 // 数据源
@@ -186,6 +188,39 @@
     }
     [self.collectionView reloadData];
 }
+- (IBAction)saveBoard {
+    UIAlertController *ac = [UIAlertController alertControllerWithTitle:@"保存画板" message:@"输入保存的名字" preferredStyle:UIAlertControllerStyleAlert];
+    [ac addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+        NSLog(@"键盘回调");
+        self.saveNameTxt = textField;
+    }];
+    [ac addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        NSString *docPath=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
+        NSString *path=[docPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.dsx",self.saveNameTxt.text]];
+        NSLog(@"path=%@",path);
+        [NSKeyedArchiver archiveRootObject:self.colorItemArray toFile:path];
+        
+        
+        NSFileManager* fm=[NSFileManager defaultManager];
+        if([fm fileExistsAtPath:docPath]){
+            //取得一个目录下得所有文件名
+            NSArray *files = [fm subpathsAtPath: docPath ];
+            NSMutableArray *userfuls = [NSMutableArray array];
+            for (NSString *name in files) {
+                if([name hasSuffix:@".dsx"]){
+                    [userfuls addObject:name];
+                }
+            }
+        }
+        
+    }]];
+    [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        
+    }]];
+    [self presentViewController:ac animated:YES completion:nil];
+    
+
+}
 
 #pragma mark -
 #pragma mark 工具类方法
@@ -196,6 +231,7 @@
     NSArray *weeks=@[[NSNull null],@"Sunday",@"Monday",@"Tuesday",@"Wednesday",@"Thursday",@"Friday",@"Saturday"];
     NSCalendar *calendar=[[NSCalendar alloc]initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
     NSTimeZone *timeZone=[[NSTimeZone alloc]initWithName:@"Asia/Beijing"];
+
     [calendar setTimeZone:timeZone];
     NSCalendarUnit calendarUnit= NSCalendarUnitWeekday;
     NSDateComponents *components=[calendar components:calendarUnit fromDate:date];
@@ -228,5 +264,22 @@
 #pragma mark -
 
 @implementation ItemEntity
+
+-(void)encodeWithCoder:(NSCoder *)aCoder
+ {
+    [aCoder encodeObject:self.bgColor forKey:@"bgColor"];
+    [aCoder encodeInteger:self.commitCount forKey:@"commitCount"];
+    [aCoder encodeObject:self.date forKey:@"date"];
+}
+
+ -(id)initWithCoder:(NSCoder *)aDecoder
+ {
+    if (self =[super init]) {
+        self.bgColor =[aDecoder decodeObjectForKey:@"bgColor"];
+        self.commitCount =[aDecoder decodeIntegerForKey:@"commitCount"];
+        self.date =[aDecoder decodeObjectForKey:@"date"];
+    }
+    return self;
+}
 
 @end
