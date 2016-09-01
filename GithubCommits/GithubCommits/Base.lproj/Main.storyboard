@@ -71,13 +71,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UD1-z3-PKA">
-                                <rect key="frame" x="10" y="90" width="100" height="30"/>
+                                <rect key="frame" x="10" y="90" width="70" height="30"/>
                                 <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="100" id="72x-NO-yNo"/>
+                                    <constraint firstAttribute="width" constant="70" id="72x-NO-yNo"/>
                                     <constraint firstAttribute="height" constant="30" id="A7v-FI-ugR"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <state key="normal" title="清空画板">
                                     <color key="titleColor" red="1" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -92,13 +92,13 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="26a-FQ-nKy">
-                                <rect key="frame" x="120" y="90" width="100" height="30"/>
+                                <rect key="frame" x="90" y="90" width="70" height="30"/>
                                 <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="E66-md-4TD"/>
-                                    <constraint firstAttribute="width" constant="100" id="hyp-r7-nnP"/>
+                                    <constraint firstAttribute="width" constant="70" id="hyp-r7-nnP"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <state key="normal" title="生成脚本">
                                     <color key="titleColor" red="1" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -113,13 +113,13 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bIe-mO-qxe">
-                                <rect key="frame" x="230" y="90" width="100" height="30"/>
+                                <rect key="frame" x="170" y="90" width="70" height="30"/>
                                 <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="uMN-Fe-fHJ"/>
-                                    <constraint firstAttribute="width" constant="100" id="xyP-Kg-V3L"/>
+                                    <constraint firstAttribute="width" constant="70" id="xyP-Kg-V3L"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <state key="normal" title="随机铺满">
                                     <color key="titleColor" red="1" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -163,9 +163,9 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Icu-vJ-nyA">
-                                <rect key="frame" x="341" y="90" width="100" height="30"/>
+                                <rect key="frame" x="251" y="90" width="70" height="30"/>
                                 <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <state key="normal" title="保存画板">
                                     <color key="titleColor" red="1" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -179,27 +179,62 @@
                                     <action selector="saveBoard" destination="BYZ-38-t0r" eventType="touchUpInside" id="dZo-3E-dE8"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SuF-YA-2QY">
+                                <rect key="frame" x="331" y="90" width="70" height="30"/>
+                                <color key="backgroundColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <state key="normal" title="取出画板">
+                                    <color key="titleColor" red="1" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="openBoard" destination="BYZ-38-t0r" eventType="touchUpInside" id="uo2-TK-pZP"/>
+                                </connections>
+                            </button>
+                            <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NRp-El-684">
+                                <rect key="frame" x="200" y="210" width="200" height="180"/>
+                                <color key="backgroundColor" red="1" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="180" id="Du5-SL-8Wz"/>
+                                    <constraint firstAttribute="width" constant="200" id="S5b-di-mid"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="NdP-f5-hCG"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="rle-Bf-mQg"/>
+                                </connections>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="f4B-Dc-4I8" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="10" id="025-2e-8En"/>
+                            <constraint firstItem="NRp-El-684" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="1Wo-fY-ZQk"/>
                             <constraint firstItem="Icu-vJ-nyA" firstAttribute="leading" secondItem="bIe-mO-qxe" secondAttribute="trailing" constant="11" id="2MY-7X-kbw"/>
                             <constraint firstItem="kj4-t6-Rs1" firstAttribute="top" secondItem="1h4-54-T6S" secondAttribute="bottom" constant="-5" id="4h4-4D-wt9"/>
                             <constraint firstItem="UD1-z3-PKA" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="10" id="68d-fj-LOk"/>
                             <constraint firstItem="kj4-t6-Rs1" firstAttribute="leading" secondItem="1h4-54-T6S" secondAttribute="leading" id="6Iq-RX-bkS"/>
                             <constraint firstItem="R2H-Et-4SQ" firstAttribute="trailing" secondItem="Q0k-0g-VDp" secondAttribute="trailing" id="86c-wJ-Uhd"/>
                             <constraint firstItem="kj4-t6-Rs1" firstAttribute="trailing" secondItem="1h4-54-T6S" secondAttribute="trailing" id="9aW-w5-aUn"/>
+                            <constraint firstItem="SuF-YA-2QY" firstAttribute="centerY" secondItem="Icu-vJ-nyA" secondAttribute="centerY" id="C6w-dn-wSO"/>
+                            <constraint firstItem="SuF-YA-2QY" firstAttribute="width" secondItem="Icu-vJ-nyA" secondAttribute="width" id="Cat-XZ-fIs"/>
                             <constraint firstItem="26a-FQ-nKy" firstAttribute="top" secondItem="Q0k-0g-VDp" secondAttribute="bottom" constant="15" id="Enq-px-zo3"/>
                             <constraint firstItem="Icu-vJ-nyA" firstAttribute="width" secondItem="bIe-mO-qxe" secondAttribute="width" id="F3O-It-CBd"/>
                             <constraint firstItem="Icu-vJ-nyA" firstAttribute="centerY" secondItem="bIe-mO-qxe" secondAttribute="centerY" id="I7v-x9-jjH"/>
                             <constraint firstItem="Q0k-0g-VDp" firstAttribute="top" secondItem="1h4-54-T6S" secondAttribute="bottom" constant="5" id="IDH-Ch-wr1"/>
                             <constraint firstItem="c8w-58-LA2" firstAttribute="leading" secondItem="gg5-dQ-Pla" secondAttribute="leading" id="JkZ-jF-bSW"/>
                             <constraint firstItem="c8w-58-LA2" firstAttribute="trailing" secondItem="gg5-dQ-Pla" secondAttribute="trailing" id="Jw7-eb-qKr"/>
+                            <constraint firstItem="SuF-YA-2QY" firstAttribute="height" secondItem="Icu-vJ-nyA" secondAttribute="height" id="Nul-iW-coc"/>
+                            <constraint firstItem="SuF-YA-2QY" firstAttribute="leading" secondItem="Icu-vJ-nyA" secondAttribute="trailing" constant="10" id="RZw-8L-UIp"/>
                             <constraint firstItem="bIe-mO-qxe" firstAttribute="top" secondItem="gg5-dQ-Pla" secondAttribute="bottom" constant="15" id="SOy-xD-mLn"/>
                             <constraint firstItem="UD1-z3-PKA" firstAttribute="top" secondItem="Q0k-0g-VDp" secondAttribute="bottom" constant="15" id="WNG-E8-spU"/>
                             <constraint firstItem="1h4-54-T6S" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="10" id="WT5-dP-vse"/>
                             <constraint firstItem="26a-FQ-nKy" firstAttribute="leading" secondItem="UD1-z3-PKA" secondAttribute="trailing" constant="10" id="Wy2-af-jUl"/>
                             <constraint firstItem="Icu-vJ-nyA" firstAttribute="height" secondItem="bIe-mO-qxe" secondAttribute="height" id="X2M-wn-SZf"/>
+                            <constraint firstItem="NRp-El-684" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="Xu0-yw-V89"/>
                             <constraint firstItem="Q0k-0g-VDp" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="10" id="chL-RI-S2J"/>
                             <constraint firstItem="5tG-LG-gdW" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" constant="10" id="chX-9D-quh"/>
                             <constraint firstItem="gg5-dQ-Pla" firstAttribute="leading" secondItem="Q0k-0g-VDp" secondAttribute="trailing" constant="10" id="czS-lQ-1ru"/>
@@ -219,6 +254,7 @@
                     <connections>
                         <outlet property="compwdTxt" destination="1h4-54-T6S" id="XMF-QQ-6m8"/>
                         <outlet property="comusersTxt" destination="Q0k-0g-VDp" id="coC-bd-ko3"/>
+                        <outlet property="tableView" destination="NRp-El-684" id="ZAA-Dj-AyV"/>
                         <outlet property="useremailTxt" destination="gg5-dQ-Pla" id="pVB-6F-4BE"/>
                         <outlet property="usernameTxt" destination="5tG-LG-gdW" id="Z40-oo-gq6"/>
                     </connections>

@@ -17,7 +17,7 @@
 
 @end
 
-@interface ViewController ()<UICollectionViewDataSource,UICollectionViewDelegate>
+@interface ViewController ()<UICollectionViewDataSource,UICollectionViewDelegate,UITableViewDataSource,UITableViewDelegate>
 @property (weak, nonatomic) IBOutlet UITextField *compwdTxt;
 @property (weak, nonatomic) IBOutlet UITextField *usernameTxt;
 @property (weak, nonatomic) IBOutlet UITextField *useremailTxt;
@@ -31,8 +31,11 @@
 @property(nonatomic,strong)UITextField *saveNameTxt;
 
 @property(nonatomic,strong)UICollectionView *collectionView;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 // 数据源
-@property(nonatomic,strong)NSMutableArray<ItemEntity *> *colorItemArray;
+@property(nonatomic,strong)NSMutableArray<ItemEntity *> *itemEntityArray;
+@property(nonatomic,strong)NSArray *localFiles;
+@property(nonatomic,strong)NSString *currentName;
 
 @end
 
@@ -60,6 +63,9 @@
     
     [self createItemEntityArray];
     [self createCollectionView];
+    [self.view bringSubviewToFront:self.tableView];
+    self.tableView.layer.cornerRadius = 2;
+    self.tableView.layer.masksToBounds = YES;
 }
 
 // 初始化天
@@ -87,12 +93,12 @@
 // 初始化内容模型
 - (void)createItemEntityArray
 {
-    self.colorItemArray = [NSMutableArray array];
+    self.itemEntityArray = [NSMutableArray array];
     for (int i = 0; i<self.dayCount; i++) {
         ItemEntity *entity = [ItemEntity new];
         entity.bgColor = SXRGBColor(234, 234, 234);
         entity.date = [self dataStringWithDeltaDay:self.dayCount - i -1];
-        [self.colorItemArray addObject:entity];
+        [self.itemEntityArray addObject:entity];
     }
 }
 
@@ -128,15 +134,17 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"CELL" forIndexPath:indexPath];
-    ItemEntity *currentEntity = [self.colorItemArray objectAtIndex:indexPath.item];
-    cell.backgroundColor = currentEntity.bgColor;
+    if (self.itemEntityArray.count > indexPath.row + 1) {
+        ItemEntity *currentEntity = [self.itemEntityArray objectAtIndex:indexPath.item];
+        cell.backgroundColor = currentEntity.bgColor;
+    }
     return cell;
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSLog(@"%ld",indexPath.item);
-    ItemEntity *currentEntity = [self.colorItemArray objectAtIndex:indexPath.item];
+    ItemEntity *currentEntity = [self.itemEntityArray objectAtIndex:indexPath.item];
     NSLog(@"%@",currentEntity.date);
     UIColor *bgColor = currentEntity.bgColor;
     NSInteger index = [self.colorArray indexOfObject:bgColor];
@@ -145,7 +153,33 @@
     currentEntity.commitCount = [[self.timesArray objectAtIndex:(index + 1)%5] integerValue];
     NSLog(@"%ld",currentEntity.commitCount);
     [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-//    NSLog(@"%@",[self randomSix]);
+}
+
+#pragma mark -
+#pragma mark 数据源代理方法tableView
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return self.localFiles.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [UITableViewCell new];
+    cell.backgroundColor = [UIColor clearColor];
+    cell.textLabel.textColor = [UIColor grayColor];
+    cell.textLabel.text = self.localFiles[indexPath.row];
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *name = self.localFiles[indexPath.row];
+    self.currentName = [name substringToIndex:name.length - 4];
+    NSString *docPath=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
+    NSString *path=[docPath stringByAppendingPathComponent:name];
+    self.itemEntityArray = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    [self.collectionView reloadData];
+    self.tableView.hidden = YES;
 }
 
 #pragma mark -
@@ -159,8 +193,8 @@
     NSMutableString *str = [NSMutableString string];
     [str appendFormat:@"#!/usr/bin/expect\n#spawn cd /Users/dsx/Desktop\n#spawn mkdir SXCommitBoard\n#spawn cd SXCommitBoard\nspawn sudo echo 请稍等3分钟不要关闭\nexpect {\n    \"*assword*\" {\n        send \"%@\\n\"\n        exp_continue\n    }\n}\n",self.compwdTxt.text];
     [str appendFormat:@"exec git config user.name %@\nexec git config user.email %@\n",self.usernameTxt.text,self.useremailTxt.text];
-    for (int i = 0; i < self.colorItemArray.count; ++i) {
-        ItemEntity *entity = [self.colorItemArray objectAtIndex:i];
+    for (int i = 0; i < self.itemEntityArray.count; ++i) {
+        ItemEntity *entity = [self.itemEntityArray objectAtIndex:i];
         if (entity.commitCount != 0) {
             [str appendFormat:@"exec sudo date %@\n",entity.date];
             for (int j = 0; j < entity.commitCount; ++j) {
@@ -177,7 +211,7 @@
 }
 - (IBAction)randomDesign:(UIButton *)sender {
     [self createItemEntityArray];
-    for (ItemEntity *entity in self.colorItemArray) {
+    for (ItemEntity *entity in self.itemEntityArray) {
         NSInteger ra = arc4random()%9;
         entity.commitCount = [[self.timesArray objectAtIndex:ra > 4 ? 0 : ra]integerValue];
         entity.bgColor = [self.colorArray objectAtIndex:ra > 4 ? 0 : ra];
@@ -193,33 +227,51 @@
     [ac addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
         NSLog(@"键盘回调");
         self.saveNameTxt = textField;
+        if (self.currentName) {
+            self.saveNameTxt.text = self.currentName;
+        }
     }];
     [ac addAction:[UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         NSString *docPath=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
         NSString *path=[docPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.dsx",self.saveNameTxt.text]];
         NSLog(@"path=%@",path);
-        [NSKeyedArchiver archiveRootObject:self.colorItemArray toFile:path];
-        
-        
         NSFileManager* fm=[NSFileManager defaultManager];
-        if([fm fileExistsAtPath:docPath]){
-            //取得一个目录下得所有文件名
-            NSArray *files = [fm subpathsAtPath: docPath ];
-            NSMutableArray *userfuls = [NSMutableArray array];
-            for (NSString *name in files) {
-                if([name hasSuffix:@".dsx"]){
-                    [userfuls addObject:name];
-                }
+        if ([fm fileExistsAtPath:path]) {
+            if ([fm isDeletableFileAtPath:path]) {
+                [fm removeItemAtPath:path error:nil];
             }
         }
+        [NSKeyedArchiver archiveRootObject:self.itemEntityArray toFile:path];
         
     }]];
     [ac addAction:[UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         
     }]];
     [self presentViewController:ac animated:YES completion:nil];
-    
+}
 
+- (IBAction)openBoard {
+    if (!self.tableView.hidden) {
+        self.tableView.hidden = YES;
+        return;
+    }
+    NSFileManager* fm=[NSFileManager defaultManager];
+    NSString *docPath=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
+    if([fm fileExistsAtPath:docPath]){
+        //取得一个目录下得所有文件名
+        NSArray *files = [fm subpathsAtPath: docPath];
+        NSMutableArray *userfuls = [NSMutableArray array];
+        for (NSString *name in files) {
+            if([name hasSuffix:@".dsx"]){
+                [userfuls addObject:name];
+            }
+        }
+        self.localFiles = userfuls;
+        if (self.localFiles.count > 0) {
+            self.tableView.hidden = NO;
+            [self.tableView reloadData];
+        }
+    }
 }
 
 #pragma mark -
