@@ -64,8 +64,10 @@
     [self createItemEntityArray];
     [self createCollectionView];
     [self.view bringSubviewToFront:self.tableView];
-    self.tableView.layer.cornerRadius = 2;
+    self.tableView.layer.cornerRadius = 4;
     self.tableView.layer.masksToBounds = YES;
+    self.tableView.layer.borderColor = [UIColor darkGrayColor].CGColor;
+    self.tableView.layer.borderWidth = 2;
 }
 
 // 初始化天
