@@ -34,7 +34,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 // 数据源
 @property(nonatomic,strong)NSMutableArray<ItemEntity *> *itemEntityArray;
-@property(nonatomic,strong)NSArray *localFiles;
+@property(nonatomic,strong)NSMutableArray *localFiles;
 @property(nonatomic,strong)NSString *currentName;
 
 @end
@@ -184,6 +184,30 @@
     self.tableView.hidden = YES;
 }
 
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *docPath=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
+    NSString *path=[docPath stringByAppendingPathComponent:self.localFiles[indexPath.row]];
+    [self.localFiles removeObjectAtIndex:indexPath.row];
+    [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    NSFileManager* fm=[NSFileManager defaultManager];
+    if ([fm fileExistsAtPath:path]) {
+        if ([fm isDeletableFileAtPath:path]) {
+            [fm removeItemAtPath:path error:nil];
+        }
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return @"清";
+}
+
 #pragma mark -
 #pragma mark 操作类方法
 
@@ -257,7 +281,7 @@
         self.tableView.hidden = YES;
         return;
     }
-    NSFileManager* fm=[NSFileManager defaultManager];
+    NSFileManager* fm= [NSFileManager defaultManager];
     NSString *docPath=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
     if([fm fileExistsAtPath:docPath]){
         //取得一个目录下得所有文件名
