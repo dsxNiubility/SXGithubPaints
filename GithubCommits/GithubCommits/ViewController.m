@@ -37,6 +37,8 @@
 @property(nonatomic,strong)NSMutableArray *localFiles;
 @property(nonatomic,strong)NSString *currentName;
 
+@property(nonatomic,assign)BOOL isClearing;
+
 @end
 
 @implementation ViewController
@@ -147,14 +149,22 @@
 {
     NSLog(@"%ld",indexPath.item);
     ItemEntity *currentEntity = [self.itemEntityArray objectAtIndex:indexPath.item];
-    NSLog(@"%@",currentEntity.date);
-    UIColor *bgColor = currentEntity.bgColor;
-    NSInteger index = [self.colorArray indexOfObject:bgColor];
-    bgColor = [self.colorArray objectAtIndex:(index + 1)%5];
-    currentEntity.bgColor = bgColor;
-    currentEntity.commitCount = [[self.timesArray objectAtIndex:(index + 1)%5] integerValue];
-    NSLog(@"%ld",currentEntity.commitCount);
+    if (self.isClearing) {
+        currentEntity.bgColor = self.colorArray[0];
+        currentEntity.commitCount = [self.timesArray[0] integerValue];
+    }else{
+        UIColor *bgColor = currentEntity.bgColor;
+        NSInteger index = [self.colorArray indexOfObject:bgColor];
+        bgColor = [self.colorArray objectAtIndex:(index + 1)%5];
+        currentEntity.bgColor = bgColor;
+        currentEntity.commitCount = [[self.timesArray objectAtIndex:(index + 1)%5] integerValue];
+    }
     [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    self.isClearing = !self.isClearing;
 }
 
 #pragma mark -
